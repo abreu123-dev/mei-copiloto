@@ -1,46 +1,46 @@
-"use client";
+// src/app/page.tsx
+"use client"; // Necessário para o hook useEffect
+
 import React, { useEffect } from 'react';
 
-// Nota sobre a correção do erro "Cannot read properties of null (reading '_')":
-// - Removi a importação de `next/head` (pode causar problemas dependendo do Router do Next)
-// - Evitei qualquer uso de APIs que dependam de objetos globais no servidor
-// - Garantia de que todos os objetos passados entre components são não-nulos
-// - Componentes pequenos e puros para facilitar testes
+// ========================================================================================
+// PÁGINA PRINCIPAL - MEI COPILOTO
+// Versão refinada com design inspirado no layout de "Mordomize"
+// Foco: Espaçamento, tipografia clara, hierarquia visual e componentes polidos.
+// Data: 2025-10-16 — Revisão 3
+// ========================================================================================
 
-export default function MeiCopilotoLanding() {
-  // título setado no cliente para não depender de Head/server APIs
+export default function Page() {
+  // Efeito para definir o título da página no navegador do cliente
   useEffect(() => {
-    try {
-      document.title = 'MEI Copiloto — Seu secretário digital';
-    } catch (e) {
-      // ambiente sem DOM (SSR) — silencioso
-    }
+    document.title = 'MEI Copiloto — A burocracia do seu jeito. Simples.';
   }, []);
 
-  const year = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
 
   return (
-    <div className="min-h-screen bg-white text-[#111] antialiased">
+    // Fundo suave e texto principal escuro para melhor legibilidade
+    <div className="min-h-screen bg-slate-50 text-gray-800 antialiased">
       <MainHeader />
-      <main className="container mx-auto px-6 py-12">
+      <main>
         <Hero />
         <Features />
-        <How />
-        <StackAndChecklist />
-        <Roadmap />
+        <HowItWorks />
         <Pricing />
-        <FaqAndFooter year={year} />
+        <Testimonials />
+        <Faq />
       </main>
+      <Footer year={currentYear} />
     </div>
   );
 }
 
-/* ------------------ Small components (defensive) ------------------ */
+/* ------------------ SEÇÕES PRINCIPAIS DA PÁGINA ------------------ */
 
 function MainHeader() {
   return (
-    <header className="border-b border-gray-200">
-      <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-lg">
+      <div className="container mx-auto flex h-16 items-center justify-between px-6">
         <Brand />
         <Nav />
       </div>
@@ -48,309 +48,324 @@ function MainHeader() {
   );
 }
 
-function Brand() {
-  return (
-    <div className="flex items-center gap-3">
-      <div className="w-10 h-10 bg-black text-white rounded-md flex items-center justify-center" aria-hidden>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 12L12 3L21 12" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M7 21L12 16L17 21" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </div>
-      <div>
-        <h1 className="text-lg font-semibold">MEI Copiloto</h1>
-        <p className="text-xs text-gray-600">Seu secretário digital — do DAS à NFS‑e</p>
-      </div>
-    </div>
-  );
-}
-
-function Nav() {
-  return (
-    <nav className="hidden md:flex gap-6 items-center text-sm">
-      <a href="#features" className="hover:underline">Recursos</a>
-      <a href="#how" className="hover:underline">Como funciona</a>
-      <a href="#roadmap" className="hover:underline">Roadmap</a>
-      <a href="#pricing" className="hover:underline">Planos</a>
-      <a href="/login" className="px-4 py-2 border rounded-md">Entrar</a>
-      <a href="/signup" className="px-4 py-2 bg-black text-white rounded-md">Começar</a>
-    </nav>
-  );
-}
-
 function Hero() {
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-      <div>
-        <h2 className="text-3xl md:text-4xl font-extrabold leading-tight">MEI Copiloto — Tudo que um MEI precisa, sem complicação</h2>
-        <p className="mt-4 text-gray-700 max-w-xl">Lembretes de DAS com link PIX, emissão assistida de NFS‑e, organização automática de documentos com OCR e relatórios simples — pensado para quem não quer perder tempo com burocracia.</p>
-
-        <div className="mt-6 flex gap-3 flex-wrap">
-          <a href="/signup" className="inline-flex items-center gap-2 px-5 py-3 bg-black text-white rounded-md font-medium">Começar grátis</a>
-          <a href="#how" className="inline-flex items-center gap-2 px-5 py-3 border rounded-md">Ver o passo a passo</a>
-        </div>
-
-        <ul className="mt-6 text-sm text-gray-600 space-y-2">
-          <li>✅ Crie sua conta e configure em minutos</li>
-          <li>✅ Receba lembretes de DAS com PIX pronto</li>
-          <li>✅ Emita NFS‑e no modo assistido — simples e seguro</li>
-        </ul>
-      </div>
-
-      <div className="bg-gray-50 rounded-xl p-6 shadow-sm">
-        <div className="mb-4">
-          <p className="text-xs text-gray-500">Painel (preview)</p>
-          <h3 className="text-lg font-semibold">Obrigações</h3>
-        </div>
-
-        <div className="space-y-3">
-          <SafePanelRow title="DAS — Setembro/2025" subtitle="Vence em 10 dias" tone="amber" label="Pendente" />
-          <SafePanelRow title="NFS-e — 01/09/2025" subtitle="Emitida (assistida)" tone="green" label="Pago" />
-
-          <div className="mt-4">
-            <a href="/dashboard" className="w-full inline-block text-center px-4 py-2 border rounded-md">Abrir painel</a>
-          </div>
-        </div>
+    <section className="container mx-auto px-6 py-20 text-center md:py-28">
+      <h1 className="text-4xl font-bold leading-tight text-gray-900 md:text-6xl">
+        A burocracia do seu MEI, <span className="text-black">finalmente simples.</span>
+      </h1>
+      <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
+        Do lembrete do DAS à emissão de NFS-e. O MEI Copiloto organiza tudo para que você possa focar no que realmente importa: seu negócio.
+      </p>
+      <div className="mt-8 flex justify-center gap-4">
+        <a href="/signup" className="transform rounded-lg bg-gray-900 px-6 py-3 font-semibold text-white shadow-md transition-transform duration-200 hover:scale-105">
+          Começar grátis
+        </a>
+        <a href="#how" className="transform rounded-lg border border-gray-300 px-6 py-3 font-semibold text-gray-800 transition-colors duration-200 hover:bg-gray-100">
+          Ver como funciona
+        </a>
       </div>
     </section>
-  );
-}
-
-// Defensive: ensure non-null props for panel row
-function SafePanelRow({ title = '', subtitle = '', tone = 'amber', label = '' }: { title?: string; subtitle?: string; tone?: 'amber' | 'green' | 'red'; label?: string }) {
-  const toneClass = tone === 'green' ? 'bg-green-100 text-green-800' : tone === 'amber' ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800';
-  return (
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-sm font-medium">{title}</p>
-        <p className="text-xs text-gray-500">{subtitle}</p>
-      </div>
-      <div className="text-right">
-        <span className={`inline-block px-3 py-1 rounded-full text-sm ${toneClass}`}>{label}</span>
-      </div>
-    </div>
   );
 }
 
 function Features() {
   return (
-    <section id="features" className="mt-16">
-      <h3 className="text-2xl font-bold">Funcionalidades principais</h3>
-      <p className="mt-2 text-gray-600 max-w-2xl">Tudo construído para o fluxo do MEI — sem jargão, sem campos confusos.</p>
-
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Feature title="Lembrete do DAS" desc="Lembretes automáticos + link PIX. Webhook atualiza status automaticamente." icon={<IconCoin />} />
-        <Feature title="NFS‑e Assistida" desc="Preencha os dados, abrimos o emissor oficial e você anexa o PDF/numero." icon={<IconNote />} />
-        <Feature title="Documentos + OCR" desc="Envie fotos/PDFs, extraímos texto, organizamos por mês/cliente." icon={<IconDocument />} />
-        <Feature title="Relatórios simples" desc="Resumo mensal, top clientes e exportação CSV/ZIP." icon={<IconChart />} />
-        <Feature title="App Mobile (Expo)" desc="Acesso rápido, notificações push para lembretes de pagamento." icon={<IconPhone />} />
-        <Feature title="Integrações" desc="PIX, e-mail transacional, WhatsApp (futuro) e provedores NFS‑e." icon={<IconPlug />} />
+    <section id="features" className="bg-white py-20">
+      <div className="container mx-auto px-6 text-center">
+        <SectionIntro title="Recursos" heading="Tudo que você precisa em um só lugar" />
+        <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <FeatureCard
+            icon={<IconCoin />}
+            title="Lembretes Inteligentes do DAS"
+            desc="Receba alertas automáticos do seu boleto DAS com link PIX para pagamento rápido. Nunca mais pague juros."
+          />
+          <FeatureCard
+            icon={<IconNote />}
+            title="Emissão de NFS-e Assistida"
+            desc="Um passo a passo guiado para emitir suas notas fiscais de serviço sem dor de cabeça, direto no portal oficial."
+          />
+          <FeatureCard
+            icon={<IconDocument />}
+            title="Organizador de Documentos com OCR"
+            desc="Envie fotos ou PDFs de suas notas e recibos. Nossa tecnologia lê, extrai os dados e organiza tudo para você."
+          />
+        </div>
       </div>
     </section>
   );
 }
 
-function How() {
+function HowItWorks() {
   return (
-    <section id="how" className="mt-16">
-      <h3 className="text-2xl font-bold">Como funciona (passo a passo)</h3>
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <HowStep num={1} title="Criar conta" desc="Crie seu usuário, informe CNPJ/municipio e CNAE." />
-        <HowStep num={2} title="Configurar DAS" desc="Configuramos obrigações mensais automaticamente." />
-        <HowStep num={3} title="Emitir NFS-e" desc="Modo assistido: preencha, transmitimos junto com você e salvamos a nota." />
+    <section id="how" className="py-20">
+      <div className="container mx-auto px-6 text-center">
+        <SectionIntro title="Como funciona" heading="Comece a usar em 3 passos simples" />
+        <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+          <HowStep num={1} title="Crie sua conta" desc="Informe seu e-mail e CNPJ. A configuração inicial é automática e leva menos de 2 minutos." />
+          <HowStep num={2} title="Receba os Lembretes" desc="Nós monitoramos suas obrigações mensais e enviamos os alertas de DAS com antecedência." />
+          <HowStep num={3} title="Emita suas Notas" desc="Use nosso assistente para preencher os dados da NFS-e. Nós te guiamos durante todo o processo." />
+        </div>
       </div>
-
-      <div className="mt-6 bg-gray-50 p-4 rounded-md">
-        <h4 className="font-semibold">Pseudocódigo (cron de DAS)</h4>
-        <pre className="mt-2 text-sm bg-white p-3 rounded-md overflow-auto border">{`// /api/cron/das
-const due = await db.obligations.where({ tipo: 'DAS', status: 'pendente' }).dueWithin(7);
-for (const o of due) {
-  const link = await pix.createCharge(o.company_id, valorDAS(o.competencia));
-  await email.send(o.company_id, 'Seu DAS', link.url);
-}`}</pre>
-      </div>
-    </section>
-  );
-}
-
-function StackAndChecklist() {
-  return (
-    <section className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div>
-        <h3 className="text-2xl font-bold">Stack técnica</h3>
-        <ul className="mt-4 list-disc pl-5 text-gray-700 space-y-2">
-          <li>Frontend: Next.js + TypeScript + Tailwind</li>
-          <li>Backend: Next.js API (serverless) + Edge Functions (cron)</li>
-          <li>DB/Auth/Storage: Supabase (Postgres)</li>
-          <li>Filas/Agendamentos: Upstash QStash ou Supabase cron</li>
-          <li>Hospedagem: Vercel + Supabase</li>
-        </ul>
-      </div>
-
-      <div>
-        <h3 className="text-2xl font-bold">Checklist de contas</h3>
-        <ul className="mt-4 list-none space-y-3">
-          <li className="flex items-start gap-3"><span className="mt-1">•</span> Domínio (.com.br)</li>
-          <li className="flex items-start gap-3"><span className="mt-1">•</span> Vercel + GitHub</li>
-          <li className="flex items-start gap-3"><span className="mt-1">•</span> Supabase</li>
-          <li className="flex items-start gap-3"><span className="mt-1">•</span> E-mail transacional (Resend/SES)</li>
-          <li className="flex items-start gap-3"><span className="mt-1">•</span> PIX (Asaas/Pagar.me/etc.)</li>
-        </ul>
-      </div>
-    </section>
-  );
-}
-
-function Roadmap() {
-  return (
-    <section id="roadmap" className="mt-16">
-      <h3 className="text-2xl font-bold">Roadmap (12 semanas)</h3>
-      <ol className="mt-4 list-decimal pl-5 space-y-3 text-gray-700">
-        <li>Sem 1–2: design system, landing, painel base, banco</li>
-        <li>Sem 3–4: DAS + PIX (sandbox), NFS-e assistida</li>
-        <li>Sem 5–6: OCR + relatórios, app (Expo) beta</li>
-        <li>Sem 7–8: NFS-e automática (1º provedor), conciliação básica</li>
-        <li>Sem 9–10: importações/CSV + emissão em lote assistida</li>
-        <li>Sem 11–12: NF-e/NFC-e (piloto 1 UF), segurança/observabilidade</li>
-      </ol>
     </section>
   );
 }
 
 function Pricing() {
   return (
-    <section id="pricing" className="mt-16">
-      <h3 className="text-2xl font-bold">Planos</h3>
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card title="Grátis" price="R$0/mês" bullets={["Até 1 empresa", "Lembretes de DAS", "NFS-e assistida (limitada)"]} />
-        <Card title="Pro" price="R$29/mês" featured bullets={["Multi-empresa", "OCR básica", "NFS-e assistida ilimitada", "Relatórios"]} />
-        <Card title="Negócios" price="Sob consulta" bullets={["Integração PIX pro", "NFS-e automática", "Suporte prioritário"]} />
-      </div>
-    </section>
-  );
-}
-
-function FaqAndFooter({ year }: { year: number }) {
-  const safeYear = typeof year === 'number' ? year : new Date().getFullYear();
-  return (
-    <section className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <div>
-        <h4 className="text-xl font-semibold">Perguntas frequentes</h4>
-        <details className="mt-3 p-4 border rounded-md">
-          <summary className="font-medium">Como funciona a emissão assistida de NFS-e?</summary>
-          <p className="mt-2 text-gray-600">Nosso fluxo abre o portal emissor oficial e orienta o preenchimento. Você confirma e anexa o PDF/numero — nós guardamos a nota.</p>
-        </details>
-
-        <details className="mt-3 p-4 border rounded-md">
-          <summary className="font-medium">É preciso certificado A1 para NF-e/NFC-e?</summary>
-          <p className="mt-2 text-gray-600">Sim — para NF-e/NFC-e (produtos) há requisitos por UF. Planejamos isso como fase avançada.</p>
-        </details>
-      </div>
-
-      <footer className="text-sm text-gray-600">
-        <h5 className="font-semibold">Contato</h5>
-        <p className="mt-2">Email: <a href="mailto:oi@meicopiloto.com.br" className="underline">oi@meicopiloto.com.br</a></p>
-        <p className="mt-2">Política de Privacidade | Termos</p>
-        <p className="mt-6 text-xs">© {safeYear} MEI Copiloto — Design simples, direto e funcional.</p>
-      </footer>
-    </section>
-  );
-}
-
-/* ------------------ Reusable primitives ------------------ */
-
-function Feature({ title, desc, icon }: { title: string; desc: string; icon: React.ReactNode }) {
-  return (
-    <div className="p-4 border rounded-lg">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-md bg-black text-white flex items-center justify-center">{icon}</div>
-        <div>
-          <h4 className="font-semibold">{title}</h4>
-          <p className="text-sm text-gray-600">{desc}</p>
+    <section id="pricing" className="bg-white py-20">
+      <div className="container mx-auto px-6 text-center">
+        <SectionIntro title="Planos" heading="Escolha o plano ideal para seu negócio" />
+        <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <PricingCard
+            title="Essencial"
+            price="R$ 0"
+            period="/mês"
+            bullets={["1 empresa", "Lembretes de DAS", "NFS-e assistida (até 3/mês)"]}
+            ctaText="Começar Gratuitamente"
+          />
+          <PricingCard
+            title="Profissional"
+            price="R$ 29"
+            period="/mês"
+            bullets={["Multi-empresa", "NFS-e assistida ilimitada", "Organizador com OCR", "Relatórios simplificados"]}
+            ctaText="Escolher Pro"
+            featured
+          />
+          <PricingCard
+            title="Negócios"
+            price="Consulte"
+            bullets={["Tudo do Pro", "NFS-e automática (beta)", "Integração PIX completa", "Suporte prioritário"]}
+            ctaText="Falar com um especialista"
+          />
         </div>
       </div>
+    </section>
+  );
+}
+
+function Testimonials() {
+  return (
+    <section className="py-20">
+      <div className="container mx-auto px-6 text-center">
+        <SectionIntro title="Depoimentos" heading="O que nossos clientes dizem" />
+        <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+          <TestimonialCard
+            quote="Finalmente um app que entende a correria do MEI. Os lembretes do DAS com PIX salvaram minha vida e meu bolso."
+            author="Juliana Silva"
+            role="Designer Gráfica"
+          />
+          <TestimonialCard
+            quote="Emitir nota fiscal era um pesadelo. Com o modo assistido, eu faço em cinco minutos, sem medo de errar. Recomendo demais!"
+            author="Ricardo Mendes"
+            role="Desenvolvedor Freelancer"
+          />
+          <TestimonialCard
+            quote="Ter todos os documentos organizados automaticamente é incrível. A declaração anual do MEI ficou muito mais fácil."
+            author="Carla Andrade"
+            role="Consultora de Marketing"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Faq() {
+    return (
+        <section className="bg-white py-20">
+            <div className="container mx-auto max-w-3xl px-6">
+                <SectionIntro title="Dúvidas" heading="Perguntas Frequentes" />
+                <div className="mt-8 space-y-4">
+                    <FaqItem
+                        question="Como funciona a emissão de NFS-e assistida?"
+                        answer="Nossa plataforma abre o portal oficial da sua prefeitura e preenche os campos com base nos dados que você informou. Você apenas confere e transmite a nota. É 100% seguro e oficial."
+                    />
+                    <FaqItem
+                        question="Preciso de certificado digital A1?"
+                        answer="Para a emissão de NFS-e (Nota de Serviço), na grande maioria dos municípios, o MEI não precisa de certificado digital. Para NF-e (Nota de Produto), as regras variam por estado, e geralmente é necessário."
+                    />
+                    <FaqItem
+                        question="Meus dados estão seguros?"
+                        answer="Sim. Usamos criptografia de ponta para todos os dados e seguimos as melhores práticas de segurança. Suas informações fiscais e de login são confidenciais e protegidas."
+                    />
+                </div>
+            </div>
+        </section>
+    );
+}
+
+function Footer({ year }: { year: number }) {
+  return (
+    <footer className="bg-gray-900 text-gray-300">
+      <div className="container mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+          <div>
+            <h3 className="text-lg font-semibold text-white">MEI Copiloto</h3>
+            <p className="mt-2 text-sm">Simplificando a vida do microempreendedor.</p>
+          </div>
+          <div>
+            <h4 className="font-semibold text-white">Links</h4>
+            <ul className="mt-4 space-y-2 text-sm">
+              <li><a href="#features" className="hover:underline">Recursos</a></li>
+              <li><a href="#pricing" className="hover:underline">Planos</a></li>
+              <li><a href="#faq" className="hover:underline">Dúvidas</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold text-white">Contato</h4>
+            <p className="mt-4 text-sm"><a href="mailto:contato@meicopiloto.com.br" className="hover:underline">contato@meicopiloto.com.br</a></p>
+          </div>
+        </div>
+        <div className="mt-12 border-t border-gray-700 pt-6 text-center text-sm">
+          <p>&copy; {year} MEI Copiloto. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+
+/* ------------------ COMPONENTES REUTILIZÁVEIS ------------------ */
+
+function Brand() {
+  return (
+    <a href="/" className="flex items-center gap-3">
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 text-white">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 12L12 3L21 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M7 21V12H17V21" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      <span className="text-lg font-semibold text-gray-900">MEI Copiloto</span>
+    </a>
+  );
+}
+
+function Nav() {
+  return (
+    <nav className="hidden items-center gap-6 text-sm font-medium text-gray-600 md:flex">
+      <a href="#features" className="hover:text-black">Recursos</a>
+      <a href="#how" className="hover:text-black">Como Funciona</a>
+      <a href="#pricing" className="hover:text-black">Planos</a>
+      <a href="/login" className="hover:text-black">Entrar</a>
+      <a href="/signup" className="rounded-lg bg-gray-900 px-4 py-2 text-white hover:bg-gray-800">Começar Agora</a>
+    </nav>
+  );
+}
+
+function SectionIntro({ title, heading }: { title: string; heading: string }) {
+  return (
+    <>
+      <p className="font-semibold uppercase tracking-wider text-black">{title}</p>
+      <h2 className="mt-2 text-3xl font-bold text-gray-900 md:text-4xl">{heading}</h2>
+    </>
+  );
+}
+
+function FeatureCard({ icon, title, desc }: { icon: React.ReactNode; title: string; desc: string }) {
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white p-8 text-left shadow-sm">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-900 text-white">
+        {icon}
+      </div>
+      <h3 className="mt-6 text-lg font-semibold text-gray-900">{title}</h3>
+      <p className="mt-2 text-gray-600">{desc}</p>
     </div>
   );
 }
 
 function HowStep({ num, title, desc }: { num: number; title: string; desc: string }) {
   return (
-    <div className="p-4 border rounded-md">
-      <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center font-semibold">{num}</div>
-        <div>
-          <h5 className="font-semibold">{title}</h5>
-          <p className="text-sm text-gray-600">{desc}</p>
-        </div>
+    <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
+      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-900 font-bold text-white">
+        {num}
       </div>
+      <h3 className="mt-6 text-lg font-semibold text-gray-900">{title}</h3>
+      <p className="mt-2 text-gray-600">{desc}</p>
     </div>
   );
 }
 
-function Card({ title, price, bullets, featured }: { title: string; price: string; bullets?: string[]; featured?: boolean }) {
+function PricingCard({ title, price, period, bullets, ctaText, featured = false }: { title: string; price: string; period?: string; bullets: string[]; ctaText: string; featured?: boolean }) {
   return (
-    <div className={`p-6 border rounded-lg ${featured ? 'ring-2 ring-black' : ''}`}>
-      <h4 className="font-semibold">{title}</h4>
-      <p className="mt-2 text-2xl font-bold">{price}</p>
-      <ul className="mt-4 space-y-2 text-sm text-gray-700">
-        {bullets?.map((b, i) => (
-          <li key={i}>• {b}</li>
+    <div className={`rounded-xl border bg-white p-8 shadow-lg ${featured ? 'border-2 border-black' : 'border-gray-200'}`}>
+      <h3 className="text-lg font-semibold">{title}</h3>
+      <p className="mt-4">
+        <span className="text-4xl font-bold"> {price} </span>
+        {period && <span className="text-gray-600">{period}</span>}
+      </p>
+      <ul className="mt-6 space-y-3 text-left">
+        {bullets.map((bullet, i) => (
+          <li key={i} className="flex items-center gap-3">
+            <span className="text-green-500">✅</span>
+            <span>{bullet}</span>
+          </li>
         ))}
       </ul>
-      <div className="mt-6">
-        <a href="/signup" className={`inline-block w-full text-center px-4 py-2 rounded-md ${featured ? 'bg-black text-white' : 'border'}`}>Escolher</a>
-      </div>
+      <a href="/signup" className={`mt-8 block w-full rounded-lg px-6 py-3 text-center font-semibold ${featured ? 'bg-gray-900 text-white hover:bg-gray-800' : 'bg-gray-100 text-gray-800 hover:bg-gray-200'}`}>
+        {ctaText}
+      </a>
     </div>
   );
 }
 
-/* ------------------ Icons (kept inline) ------------------ */
+function TestimonialCard({ quote, author, role }: { quote: string; author: string; role: string }) {
+    return (
+        <div className="rounded-xl border border-gray-200 bg-white p-8 text-left shadow-sm">
+            <p className="text-gray-700">"{quote}"</p>
+            <div className="mt-6 flex items-center gap-4">
+                {/* Placeholder para Avatar */}
+                <div className="h-12 w-12 rounded-full bg-gray-200"></div>
+                <div>
+                    <p className="font-semibold text-gray-900">{author}</p>
+                    <p className="text-sm text-gray-600">{role}</p>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function FaqItem({ question, answer }: { question: string, answer: string }) {
+    return (
+        <details className="group rounded-lg border border-gray-200 bg-white p-6">
+            <summary className="flex cursor-pointer list-none items-center justify-between font-semibold text-gray-900">
+                {question}
+                <div className="transition-transform duration-200 group-open:rotate-180">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 9L12 15L18 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                </div>
+            </summary>
+            <p className="mt-4 text-gray-700">{answer}</p>
+        </details>
+    );
+}
+
+
+/* ------------------ ÍCONES (SVG) ------------------ */
+
 function IconCoin() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <circle cx="12" cy="12" r="9" stroke="white" strokeWidth="1.2" />
-      <path d="M12 8v8M9 11h6" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <circle cx="12" cy="12" r="9" stroke="white" strokeWidth="1.5" />
+      <path d="M12 7v10m-3-6h6" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
 }
 function IconNote() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <path d="M7 7h10M7 11h10M7 15h6" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="4" y="4" width="16" height="16" rx="2" stroke="white" strokeWidth="1.2" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M8 7h8m-8 4h8m-8 4h4" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+      <rect x="4" y="4" width="16" height="16" rx="2" stroke="white" strokeWidth="1.5" />
     </svg>
   );
 }
 function IconDocument() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <path d="M14 3v4a2 2 0 0 0 2 2h4" stroke="white" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14 2v6h6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
-function IconChart() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <path d="M3 3v18h18" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M7 13l3-4 4 5 3-6" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-function IconPhone() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <path d="M22 16.92V21a1 1 0 0 1-1.11 1A19 19 0 0 1 3 4.11 1 1 0 0 1 4 3h4.09a1 1 0 0 1 1 .75c.12.7.37 1.7.73 2.59a1 1 0 0 1-.24 1.05L8.91 9.91a14 14 0 0 0 5.18 5.18l1.52-1.7a1 1 0 0 1 1.05-.24c.9.36 1.9.6 2.6.73a1 1 0 0 1 .75 1V21z" stroke="white" strokeWidth="0.8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-function IconPlug() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <path d="M6 3v6a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3V3" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M8 21h8" stroke="white" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-/* ------------------ End of file ------------------ */
