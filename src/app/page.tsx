@@ -2,12 +2,13 @@
 "use client"; // Necessário para o hook useEffect
 
 import React, { useEffect } from 'react';
+import Link from 'next/link'; // CORREÇÃO: Importando o componente Link do Next.js
 
 // ========================================================================================
 // PÁGINA PRINCIPAL - MEI COPILOTO
 // Versão refinada com design inspirado no layout de "Mordomize"
 // Foco: Espaçamento, tipografia clara, hierarquia visual e componentes polidos.
-// Data: 2025-10-16 — Revisão 3
+// Data: 2025-10-16 — Revisão 4 (com correções de build)
 // ========================================================================================
 
 export default function Page() {
@@ -230,7 +231,8 @@ function Footer({ year }: { year: number }) {
 
 function Brand() {
   return (
-    <a href="/" className="flex items-center gap-3">
+    // CORREÇÃO: Usando <Link> em vez de <a> para navegação interna
+    <Link href="/" className="flex items-center gap-3">
       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 text-white">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M3 12L12 3L21 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -238,7 +240,7 @@ function Brand() {
         </svg>
       </div>
       <span className="text-lg font-semibold text-gray-900">MEI Copiloto</span>
-    </a>
+    </Link>
   );
 }
 
@@ -313,7 +315,8 @@ function PricingCard({ title, price, period, bullets, ctaText, featured = false 
 function TestimonialCard({ quote, author, role }: { quote: string; author: string; role: string }) {
     return (
         <div className="rounded-xl border border-gray-200 bg-white p-8 text-left shadow-sm">
-            <p className="text-gray-700">"{quote}"</p>
+            {/* CORREÇÃO: Usando aspas simples para evitar erro de 'unescaped entities' */}
+            <p className="text-gray-700">'{quote}'</p>
             <div className="mt-6 flex items-center gap-4">
                 {/* Placeholder para Avatar */}
                 <div className="h-12 w-12 rounded-full bg-gray-200"></div>
