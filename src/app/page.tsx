@@ -7,8 +7,7 @@ import Link from 'next/link'; // CORREÇÃO: Importando o componente Link do Nex
 // ========================================================================================
 // PÁGINA PRINCIPAL - MEI COPILOTO
 // Versão refinada com design inspirado no layout de "Mordomize"
-// Foco: Espaçamento, tipografia clara, hierarquia visual e componentes polidos.
-// Data: 2025-10-16 — Revisão 4 (com correções de build)
+// Data: 2025-10-16 — Revisão 5 (Correção final de build)
 // ========================================================================================
 
 export default function Page() {
@@ -231,7 +230,6 @@ function Footer({ year }: { year: number }) {
 
 function Brand() {
   return (
-    // CORREÇÃO: Usando <Link> em vez de <a> para navegação interna
     <Link href="/" className="flex items-center gap-3">
       <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 text-white">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -315,10 +313,9 @@ function PricingCard({ title, price, period, bullets, ctaText, featured = false 
 function TestimonialCard({ quote, author, role }: { quote: string; author: string; role: string }) {
     return (
         <div className="rounded-xl border border-gray-200 bg-white p-8 text-left shadow-sm">
-            {/* CORREÇÃO: Usando aspas simples para evitar erro de 'unescaped entities' */}
-            <p className="text-gray-700">'{quote}'</p>
+            {/* CORREÇÃO FINAL: Removendo as aspas literais que causam o erro de build */}
+            <p className="text-gray-700 italic">{quote}</p>
             <div className="mt-6 flex items-center gap-4">
-                {/* Placeholder para Avatar */}
                 <div className="h-12 w-12 rounded-full bg-gray-200"></div>
                 <div>
                     <p className="font-semibold text-gray-900">{author}</p>
@@ -347,28 +344,6 @@ function FaqItem({ question, answer }: { question: string, answer: string }) {
 
 
 /* ------------------ ÍCONES (SVG) ------------------ */
-
-function IconCoin() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <circle cx="12" cy="12" r="9" stroke="white" strokeWidth="1.5" />
-      <path d="M12 7v10m-3-6h6" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-function IconNote() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <path d="M8 7h8m-8 4h8m-8 4h4" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
-      <rect x="4" y="4" width="16" height="16" rx="2" stroke="white" strokeWidth="1.5" />
-    </svg>
-  );
-}
-function IconDocument() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M14 2v6h6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
+function IconCoin() { return ( <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden><circle cx="12" cy="12" r="9" stroke="white" strokeWidth="1.5" /><path d="M12 7v10m-3-6h6" stroke="white" strokeWidth="1.5" strokeLinecap="round" /></svg> ); }
+function IconNote() { return ( <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden><path d="M8 7h8m-8 4h8m-8 4h4" stroke="white" strokeWidth="1.5" strokeLinecap="round" /><rect x="4" y="4" width="16" height="16" rx="2" stroke="white" strokeWidth="1.5" /></svg> ); }
+function IconDocument() { return ( <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M14 2v6h6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg> ); }
